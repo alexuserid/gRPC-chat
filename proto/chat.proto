@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package communication;
+
+message Empty {}
+
+message Username {
+	string name = 1;
+}
+
+message Sid {
+	string id = 1;
+}
+
+message Userlist {
+	repeated string Username = 1;
+}
+
+message Message {
+	string sid = 1;
+	string name = 2;
+	oneof data {
+		string text = 3;
+		string status = 4;
+	}
+}
+
+service Chat {
+	rpc Login(Username) returns (Sid);
+	rpc Logout(Sid) returns (Empty);
+	rpc ShowUsers(Empty) returns (Userlist);
+	rpc SendMessage(Message) returns (Empty);
+	rpc Flow(Empty) returns (stream Message);
+}
