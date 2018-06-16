@@ -4,20 +4,29 @@ package communication;
 
 message Empty {}
 
-message Username {
+message LoginRequest {
 	string name = 1;
 }
 
-message Sid {
-	string id = 1;
+message LoginResponse {
+	string sid = 1;
 }
 
-message Userlist {
-	repeated string Username = 1;
+message LogoutRequest {
+	string sid = 1;
+}
+
+message ListUsersResponse {
+	repeated string Users = 1;
+}
+
+message SendMessageRequest {
+	string sid = 1;
+	string text = 2;
 }
 
 message Message {
-	string sid = 1;
+	string message_id = 1;
 	string name = 2;
 	oneof data {
 		string text = 3;
@@ -26,9 +35,9 @@ message Message {
 }
 
 service Chat {
-	rpc Login(Username) returns (Sid);
-	rpc Logout(Sid) returns (Empty);
-	rpc ShowUsers(Empty) returns (Userlist);
-	rpc SendMessage(Message) returns (Empty);
-	rpc Flow(Empty) returns (stream Message);
+	rpc Login(LoginRequest) returns (LoginResponse);
+	rpc Logout(LogoutRequest) returns (Empty);
+	rpc LastUsers(Empty) returns (ListUsersResponse);
+	rpc SendMessage(SendMessageRequest) returns (Empty);
+	rpc Watch(Empty) returns (stream Message);
 }
