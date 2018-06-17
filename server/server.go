@@ -10,7 +10,7 @@ import (
 
 	pb "github.com/alexuserid/grpc-chat/proto"
 	"google.golang.org/grpc"
-	id "github.com/alexuserid/id"
+	"github.com/alexuserid/id"
 )
 
 const messageN = 10
@@ -42,7 +42,10 @@ func (s *server) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginRespo
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 	if _, has := s.usernames[in.Name]; has {
-		return &pb.LoginResponse{}, fmt.Errorf("User with this name already exists")
+		return nil, fmt.Errorf("User with this name already exists")
+	}
+	if _, has := s.sidUser[sid]; has {
+		return nil, fmt.Errorf("Please, try again")
 	}
 	s.sidUser[sid] = in.Name
 	s.usernames[in.Name] = exists
@@ -52,21 +55,21 @@ func (s *server) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginRespo
 
 func (s *server) Logout(ctx context.Context, in *pb.LogoutRequest) (*pb.Empty, error) {
 	s.mutex.Lock()
+	defer s.mutex.Unlock()
 	name := s.sidUser[in.Sid]
 	delete(s.sidUser, in.Sid)
 	delete(s.usernames, name)
-	s.mutex.Unlock()
 
-	return &pb.Empty{}, nil
+	return nil, nil
 }
 
 func (s *server) LastUsers(ctx context.Context, in *pb.Empty) (*pb.ListUsersResponse, error) {
 	var users []string
 	s.mutex.RLock()
+	defer s.mutex.RUnlock()
 	for k, _ := range s.usernames {
 		users = append(users, k)
 	}
-	s.mutex.RUnlock()
 
 	return &pb.ListUsersResponse{Users: users}, nil
 }
@@ -74,7 +77,7 @@ func (s *server) LastUsers(ctx context.Context, in *pb.Empty) (*pb.ListUsersResp
 func (s *server) SendMessage(ctx context.Context, in *pb.SendMessageRequest) (*pb.Empty, error) {
 	s.messageRing.Value = in
 	s.messageRing = s.messageRing.Next()
-	return &pb.Empty{}, nil
+	return nil, nil
 }
 
 func (s *server) Watch(in *pb.Empty, stream pb.Chat_WatchServer) error {
