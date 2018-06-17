@@ -37,7 +37,7 @@ message Message {
 service Chat {
 	rpc Login(LoginRequest) returns (LoginResponse);
 	rpc Logout(LogoutRequest) returns (Empty);
-	rpc LastUsers(Empty) returns (ListUsersResponse);
+	rpc ListUsers(Empty) returns (ListUsersResponse);
 	rpc SendMessage(SendMessageRequest) returns (Empty);
 	rpc Watch(Empty) returns (stream Message);
 }

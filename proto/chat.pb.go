@@ -33,7 +33,7 @@ func (m *Empty) Reset()         { *m = Empty{} }
 func (m *Empty) String() string { return proto.CompactTextString(m) }
 func (*Empty) ProtoMessage()    {}
 func (*Empty) Descriptor() ([]byte, []int) {
-	return fileDescriptor_chat_d71862de62710e7d, []int{0}
+	return fileDescriptor_chat_9bf5ca8fef8a79dd, []int{0}
 }
 func (m *Empty) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_Empty.Unmarshal(m, b)
@@ -64,7 +64,7 @@ func (m *LoginRequest) Reset()         { *m = LoginRequest{} }
 func (m *LoginRequest) String() string { return proto.CompactTextString(m) }
 func (*LoginRequest) ProtoMessage()    {}
 func (*LoginRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_chat_d71862de62710e7d, []int{1}
+	return fileDescriptor_chat_9bf5ca8fef8a79dd, []int{1}
 }
 func (m *LoginRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_LoginRequest.Unmarshal(m, b)
@@ -102,7 +102,7 @@ func (m *LoginResponse) Reset()         { *m = LoginResponse{} }
 func (m *LoginResponse) String() string { return proto.CompactTextString(m) }
 func (*LoginResponse) ProtoMessage()    {}
 func (*LoginResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_chat_d71862de62710e7d, []int{2}
+	return fileDescriptor_chat_9bf5ca8fef8a79dd, []int{2}
 }
 func (m *LoginResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_LoginResponse.Unmarshal(m, b)
@@ -140,7 +140,7 @@ func (m *LogoutRequest) Reset()         { *m = LogoutRequest{} }
 func (m *LogoutRequest) String() string { return proto.CompactTextString(m) }
 func (*LogoutRequest) ProtoMessage()    {}
 func (*LogoutRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_chat_d71862de62710e7d, []int{3}
+	return fileDescriptor_chat_9bf5ca8fef8a79dd, []int{3}
 }
 func (m *LogoutRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_LogoutRequest.Unmarshal(m, b)
@@ -178,7 +178,7 @@ func (m *ListUsersResponse) Reset()         { *m = ListUsersResponse{} }
 func (m *ListUsersResponse) String() string { return proto.CompactTextString(m) }
 func (*ListUsersResponse) ProtoMessage()    {}
 func (*ListUsersResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_chat_d71862de62710e7d, []int{4}
+	return fileDescriptor_chat_9bf5ca8fef8a79dd, []int{4}
 }
 func (m *ListUsersResponse) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_ListUsersResponse.Unmarshal(m, b)
@@ -217,7 +217,7 @@ func (m *SendMessageRequest) Reset()         { *m = SendMessageRequest{} }
 func (m *SendMessageRequest) String() string { return proto.CompactTextString(m) }
 func (*SendMessageRequest) ProtoMessage()    {}
 func (*SendMessageRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_chat_d71862de62710e7d, []int{5}
+	return fileDescriptor_chat_9bf5ca8fef8a79dd, []int{5}
 }
 func (m *SendMessageRequest) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_SendMessageRequest.Unmarshal(m, b)
@@ -267,7 +267,7 @@ func (m *Message) Reset()         { *m = Message{} }
 func (m *Message) String() string { return proto.CompactTextString(m) }
 func (*Message) ProtoMessage()    {}
 func (*Message) Descriptor() ([]byte, []int) {
-	return fileDescriptor_chat_d71862de62710e7d, []int{6}
+	return fileDescriptor_chat_9bf5ca8fef8a79dd, []int{6}
 }
 func (m *Message) XXX_Unmarshal(b []byte) error {
 	return xxx_messageInfo_Message.Unmarshal(m, b)
@@ -426,7 +426,7 @@ const _ = grpc.SupportPackageIsVersion4
 type ChatClient interface {
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*Empty, error)
-	LastUsers(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ListUsersResponse, error)
+	ListUsers(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ListUsersResponse, error)
 	SendMessage(ctx context.Context, in *SendMessageRequest, opts ...grpc.CallOption) (*Empty, error)
 	Watch(ctx context.Context, in *Empty, opts ...grpc.CallOption) (Chat_WatchClient, error)
 }
@@ -457,9 +457,9 @@ func (c *chatClient) Logout(ctx context.Context, in *LogoutRequest, opts ...grpc
 	return out, nil
 }
 
-func (c *chatClient) LastUsers(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ListUsersResponse, error) {
+func (c *chatClient) ListUsers(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ListUsersResponse, error) {
 	out := new(ListUsersResponse)
-	err := c.cc.Invoke(ctx, "/communication.Chat/LastUsers", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/communication.Chat/ListUsers", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -511,7 +511,7 @@ func (x *chatWatchClient) Recv() (*Message, error) {
 type ChatServer interface {
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	Logout(context.Context, *LogoutRequest) (*Empty, error)
-	LastUsers(context.Context, *Empty) (*ListUsersResponse, error)
+	ListUsers(context.Context, *Empty) (*ListUsersResponse, error)
 	SendMessage(context.Context, *SendMessageRequest) (*Empty, error)
 	Watch(*Empty, Chat_WatchServer) error
 }
@@ -556,20 +556,20 @@ func _Chat_Logout_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Chat_LastUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Chat_ListUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ChatServer).LastUsers(ctx, in)
+		return srv.(ChatServer).ListUsers(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/communication.Chat/LastUsers",
+		FullMethod: "/communication.Chat/ListUsers",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatServer).LastUsers(ctx, req.(*Empty))
+		return srv.(ChatServer).ListUsers(ctx, req.(*Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -626,8 +626,8 @@ var _Chat_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Chat_Logout_Handler,
 		},
 		{
-			MethodName: "LastUsers",
-			Handler:    _Chat_LastUsers_Handler,
+			MethodName: "ListUsers",
+			Handler:    _Chat_ListUsers_Handler,
 		},
 		{
 			MethodName: "SendMessage",
@@ -644,10 +644,10 @@ var _Chat_serviceDesc = grpc.ServiceDesc{
 	Metadata: "chat.proto",
 }
 
-func init() { proto.RegisterFile("chat.proto", fileDescriptor_chat_d71862de62710e7d) }
+func init() { proto.RegisterFile("chat.proto", fileDescriptor_chat_9bf5ca8fef8a79dd) }
 
-var fileDescriptor_chat_d71862de62710e7d = []byte{
-	// 331 bytes of a gzipped FileDescriptorProto
+var fileDescriptor_chat_9bf5ca8fef8a79dd = []byte{
+	// 330 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x52, 0x4f, 0x4b, 0xfb, 0x40,
 	0x14, 0xfc, 0xa5, 0x4d, 0x52, 0xf2, 0x7e, 0x16, 0xf4, 0x51, 0x24, 0x54, 0x85, 0x76, 0x4f, 0xf5,
 	0x52, 0x44, 0x0f, 0x82, 0x78, 0x6a, 0x51, 0x14, 0xea, 0xa5, 0x22, 0x1e, 0x65, 0x4d, 0x96, 0x26,
@@ -665,8 +665,8 @@ var fileDescriptor_chat_d71862de62710e7d = []byte{
 	0x83, 0x9b, 0xf3, 0xc2, 0x05, 0x3b, 0xe4, 0xc4, 0x2f, 0xbf, 0x7b, 0x60, 0x2f, 0x23, 0x4e, 0xb8,
 	0x00, 0xa7, 0xc8, 0x0a, 0x4f, 0xe6, 0x7f, 0x12, 0x9f, 0xef, 0xa7, 0x3c, 0x3e, 0x6d, 0xbf, 0x34,
 	0xa1, 0xdc, 0x82, 0x5b, 0x86, 0x89, 0x2d, 0xbc, 0x5d, 0xc6, 0xe3, 0x51, 0xed, 0xb6, 0x68, 0x14,
-	0x97, 0xe0, 0xad, 0xb8, 0xc9, 0x19, 0x5b, 0x29, 0xe3, 0x49, 0x5d, 0xb6, 0xd1, 0xcb, 0x3d, 0xfc,
-	0xdf, 0x6b, 0x00, 0xa7, 0xb5, 0x85, 0x66, 0x3b, 0x1d, 0x66, 0xae, 0xc1, 0x79, 0xe5, 0x14, 0x44,
-	0x1d, 0x46, 0x8e, 0x6b, 0xa8, 0xd1, 0xbc, 0xb0, 0xde, 0xdd, 0xe2, 0xdb, 0x5e, 0xfd, 0x04, 0x00,
-	0x00, 0xff, 0xff, 0xce, 0x48, 0x67, 0x33, 0xc4, 0x02, 0x00, 0x00,
+	0x97, 0xe0, 0x55, 0x39, 0x63, 0x2b, 0x65, 0x3c, 0xa9, 0xcb, 0x36, 0x7a, 0xb9, 0x87, 0xff, 0x7b,
+	0x0d, 0xe0, 0xb4, 0xb6, 0xd0, 0x6c, 0xa7, 0xc3, 0xcc, 0x35, 0x38, 0xaf, 0x9c, 0x82, 0xa8, 0xc3,
+	0xc8, 0x71, 0x0d, 0x35, 0x9a, 0x17, 0xd6, 0xbb, 0x5b, 0x7c, 0xdb, 0xab, 0x9f, 0x00, 0x00, 0x00,
+	0xff, 0xff, 0xc3, 0x8a, 0xed, 0x71, 0xc4, 0x02, 0x00, 0x00,
 }
