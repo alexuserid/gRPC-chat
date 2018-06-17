@@ -1,1 +1,1 @@
-Simple chant based on gRPC
+Simple chat based on gRPC
