@@ -17,7 +17,7 @@ message LogoutRequest {
 }
 
 message ListUsersResponse {
-	repeated string Users = 1;
+	repeated string users = 1;
 }
 
 message SendMessageRequest {
