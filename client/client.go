@@ -18,20 +18,21 @@ func main() {
 	c := pb.NewChatClient(conn)
 
 	var user string
+	fmt.Print("Enter user name: ")
 	fmt.Scanln(&user)
 	sid, err := c.Login(context.Background(), &pb.LoginRequest{Name: user})
 	if err != nil {
-		fmt.Println(err)
-		return
+		log.Fatalf("Login: %s", err)
 	}
 	fmt.Println(sid)
 
-	users, err := c.LastUsers(context.Background(), &pb.Empty{})
+	users, err := c.ListUsers(context.Background(), &pb.Empty{})
 	if err != nil {
-		fmt.Println(err)
+		log.Fatalf("Getting user list: %s", err)
 		return
 	}
-	for _, v := range users.Users {
-		fmt.Println(v)
+	fmt.Println("Users online:")
+	for i, v := range users.Users {
+		fmt.Printf("%d. %s\n", i+1, v)
 	}
 }

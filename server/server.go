@@ -34,7 +34,8 @@ func NewServer() (*server, error) {
 func (s *server) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginResponse, error) {
 	sid, err := id.GetRandomHexString(32)
 	if err != nil {
-		log.Printf("id.GetRandomHex: %v", err)
+		fmt.Printf("id.GetRandomHex: %v", err)
+		return nil, err
 	}
 
 	exists := struct{}{}
@@ -60,10 +61,10 @@ func (s *server) Logout(ctx context.Context, in *pb.LogoutRequest) (*pb.Empty, e
 	delete(s.sidUser, in.Sid)
 	delete(s.usernames, name)
 
-	return nil, nil
+	return &pb.Empty{}, nil
 }
 
-func (s *server) LastUsers(ctx context.Context, in *pb.Empty) (*pb.ListUsersResponse, error) {
+func (s *server) ListUsers(ctx context.Context, in *pb.Empty) (*pb.ListUsersResponse, error) {
 	var users []string
 	s.mutex.RLock()
 	defer s.mutex.RUnlock()
