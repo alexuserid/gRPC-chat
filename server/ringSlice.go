@@ -26,7 +26,7 @@ func NewRingSlice() *ringSlice {
 func (r *ringSlice) AddMessage(msg message) {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
-	r.history = append(r.history[:1], msg)
+	r.history = append(r.history[1:], msg)
 }
 
 func (r *ringSlice) GetAllMessages() []message {
