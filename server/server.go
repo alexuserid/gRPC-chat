@@ -83,13 +83,24 @@ func (s *server) SendMessage(ctx context.Context, in *pb.SendMessageRequest) (*p
 		text: in.Text,
 	}
 	s.messageRing.AddMessage(input)
-	return nil, nil
+	return &pb.Empty{}, nil
 }
 
 func (s *server) Watch(in *pb.Empty, stream pb.Chat_WatchServer) error {
 	// stream variable is like w http.ResponseWriter in a simple go server
-
-	return fmt.Errorf("Unimplemented")
+	for _, v := range s.messageRing.history {
+		msg := &pb.Message{
+			MessageId: v.messageId,
+			Name: v.name,
+			Data: &pb.Message_Text{v.text},
+		}
+		err := stream.Send(msg)
+		if err != nil {
+			log.Printf("stream.Send(): %v", err)
+			return err
+		}
+	}
+	return nil
 }
 
 func main() {
