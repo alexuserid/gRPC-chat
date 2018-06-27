@@ -1,7 +1,6 @@
 package main
 
 import (
-	"container/ring"
 	"context"
 	"log"
 	"fmt"
@@ -13,12 +12,10 @@ import (
 	"github.com/alexuserid/id"
 )
 
-const messageN = 10
-
 type server struct{
 	sidUser map[string]string
 	usernames map[string]struct{}
-	messageRing *ring.Ring
+	messageRing *ringSlice
 	mutex sync.RWMutex
 }
 
@@ -27,7 +24,7 @@ func NewServer() (*server, error) {
 	return &server{
 		sidUser: make(map[string]string),
 		usernames: make(map[string]struct{}),
-		messageRing: ring.New(messageN),
+		messageRing: NewRingSlice(),
 	}, nil
 }
 
@@ -76,12 +73,22 @@ func (s *server) ListUsers(ctx context.Context, in *pb.Empty) (*pb.ListUsersResp
 }
 
 func (s *server) SendMessage(ctx context.Context, in *pb.SendMessageRequest) (*pb.Empty, error) {
-	s.messageRing.Value = in
-	s.messageRing = s.messageRing.Next()
+	mId, err := id.GetRandomHexString(8)
+	if err != nil {
+		return &pb.Empty{}, err
+	}
+	input := message{
+		messageId: mId,
+		name: s.sidUser[in.Sid],
+		text: in.Text,
+	}
+	s.messageRing.AddMessage(input)
 	return nil, nil
 }
 
 func (s *server) Watch(in *pb.Empty, stream pb.Chat_WatchServer) error {
+	// stream variable is like w http.ResponseWriter in a simple go server
+
 	return fmt.Errorf("Unimplemented")
 }
 
