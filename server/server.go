@@ -16,7 +16,7 @@ type server struct{
 	sidUser map[string]string
 	usernames map[string]struct{}
 	messageRing *ringSlice
-	messageChanels []chan *pb.Message
+	messageChanels []chan message
 	mutex sync.RWMutex
 }
 
@@ -106,11 +106,16 @@ func (s *server) Watch(in *pb.Empty, stream pb.Chat_WatchServer) error {
 		}
 	}
 
-	s.messageChanels = append(s.messageChanels, make(chan *pb.Message, 100))
+	s.messageChanels = append(s.messageChanels, make(chan message, 100))
 	for {
 		for _, v := range s.messageChanels {
 			select {
-			case msg := <-v:
+			case m := <-v:
+				msg := &pb.Message{
+					MessageId: m.messageId,
+					Name: m.name,
+					Data: &pb.Message_Text{m.text},
+				}
 				err := stream.Send(msg)
 				if err != nil {
 					log.Printf("stream.Send(): %v", err)
