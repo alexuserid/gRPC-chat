@@ -39,7 +39,7 @@ func main() {
 		fmt.Printf("%d. %s\n", i+1, v)
 	}
 
-	// Show messaes
+	// Show messages
 	stream, err := c.Watch(context.Background(), &pb.Empty{})
 	// Show old messages
 	fmt.Println("Unread messages: ")
